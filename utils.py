@@ -106,10 +106,14 @@ def flow_loss(graph, preds, true_vals):
     for i, y in enumerate(true_vals):
         trueC[i,i] = y
     invG = torch.inverse(G)
-    # invG = torch.pinverse(G)
-    # pdb.set_trace()
     left = (Gv @ torch.transpose(invG,0,1)) @ torch.transpose(Q, 0, 1)
     right = Q @ (invG @ Gv)
+
+    print(torch.min(right))
+    if torch.min(right) < 0.0:
+        print(torch.min(right))
+        pdb.set_trace()
+
     loss = left @ trueC @ right
     if loss.item() == 0.0:
         print(true_vals)
